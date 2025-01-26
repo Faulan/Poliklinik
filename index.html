@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Poliklinik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #45a049;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        main {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+        #form-container {
+            width: 30%;
+            padding: 2em;
+            background-color: #f9f9f9;
+            border-right: 8px solid #ccc;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        #form-container h2 {
+            margin-top: 0;
+        }
+        #form-container input, #form-container select, #form-container textarea, #form-container button {
+            width: 100%;
+            margin: 0.5em 0;
+            padding: 0.5em;
+            font-size: 1em;
+        }
+        #form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #form-container button:hover {
+            background-color: #45a049;
+        }
+        #data-list {
+            margin-top: 1em;
+            margin-left: 2em;
+            width: 60%;
+        }
+        #data-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+        #data-list table, #data-list th, #data-list td {
+            border: 5px solid #ccc;
+        }
+        #data-list th, #data-list td {
+            padding: 0.5em;
+            text-align: center;
+        }
+        #data-list th {
+            background-color: #45a049;
+            color: white;
+        }
+        #data-list tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Menu navigasi */
+        #menu {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            padding: 10px;
+        }
+        #menu a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        #menu a:hover {
+            background-color: #575757;
+        }
+        #form-container h3 {
+            margin-top: 1.5em;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 0.3em 0.6em;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #e53935;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistem Informasi Poliklinik</h1>
+    </header>
+
+    <!-- Menu Navigasi -->
+    <div id="menu">
+        <a href="#pasien">Data Pasien</a>
+        <a href="#dokter">Data Dokter</a>
+        <a href="#obat">Data Obat</a>
+        <a href="#diagnosa">Data Diagnosa</a>
+        <a href="#resep">Data Resep</a>
+        <a href="#biaya">Data Biaya</a>
+        <a href="#stok">Data Stok Obat</a>
+    </div>
+
+    <main>
+        <div id="form-container">
+            <h2>Input Data</h2>
+            
+            <!-- Form Pasien -->
+            <div id="pasien">
+                <h3>Pasien</h3>
+                <form id="pasien-form">
+                    <label for="pasien-nama">Nama Pasien:</label>
+                    <input type="text" id="pasien-nama" required>
+
+                    <label for="pasien-nomor">Nomor Identitas:</label>
+                    <input type="text" id="pasien-nomor" required>
+
+                    <label for="pasien-alamat">Alamat:</label>
+                    <input type="text" id="pasien-alamat" required>
+
+                    <label for="pasien-jenis-kelamin">Jenis Kelamin:</label>
+                    <select id="pasien-jenis-kelamin" required>
+                        <option value="Laki-Laki">Laki-Laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+
+                    <label for="pasien-tgl-lahir">Tanggal Lahir:</label>
+                    <input type="date" id="pasien-tgl-lahir" required>
+
+                    <label for="pasien-umur">Umur:</label>
+                    <input type="number" id="pasien-umur" required>
+
+                    <button type="button" id="add-pasien">Tambah Pasien</button>
+                </form>
+            </div>
+
+            <!-- Form Dokter -->
+            <div id="dokter">
+                <h3>Dokter</h3>
+                <form id="dokter-form">
+                    <label for="dokter-nama">Nama Dokter:</label>
+                    <input type="text" id="dokter-nama" required>
+
+                    <label for="dokter-spesialis">Spesialis:</label>
+                    <input type="text" id="dokter-spesialis" required>
+
+                    <button type="button" id="add-dokter">Tambah Dokter</button>
+                </form>
+            </div>
+
+            <!-- Form Obat -->
+            <div id="obat">
+                <h3>Obat</h3>
+                <form id="obat-form">
+                    <label for="obat-nama">Nama Obat:</label>
+                    <input type="text" id="obat-nama" required>
+
+                    <label for="obat-aturan">Aturan Penggunaan:</label>
+                    <textarea id="obat-aturan" required></textarea>
+
+                    <label for="obat-indikasi">Indikasi Obat</label>
+                    <input type=""text" id="obat-indikasi"required>
+
+                    <label for="obat-harga">Harga:</label>
+                    <input type="number" id="obat-harga" required>
+
+                    <button type="button" id="add-obat">Tambah Obat</button>
+                </form>
+            </div>
+
+            <!-- Form Diagnosa -->
+            <div id="diagnosa">
+                <h3>Diagnosa</h3>
+                <form id="diagnosa-form">
+                    <label for="diagnosa-pasien">Nama Pasien:</label>
+                    <input type="text" id="diagnosa-pasien" required>
+
+                    <label for="diagnosa-nama">Diagnosa Pasien:</label>
+                    <input type="text" id="diagnosa-nama" required>
+
+                    <button type="button" id="add-diagnosa">Tambah Diagnosa</button>
+                </form>
+            </div>
+
+            <!-- Form Resep -->
+            <div id="resep">
+                <h3>Resep</h3>
+                <form id="resep-form">
+                    <label for="resep-pasien">Nama Pasien:</label>
+                    <input type="text" id="resep-pasien" required>
+
+                    <label for="resep-id">ID Resep:</label>
+                    <input type="text" id="resep-id" required>
+
+                    <label for="resep-detail">Detail Obat:</label>
+                    <textarea id="resep-detail" required></textarea>
+
+                    <button type="button" id="add-resep">Tambah Resep</button>
+                </form>
+            </div>
+
+            <!-- Form Biaya -->
+            <div id="biaya">
+                <h3>Biaya</h3>
+                <form id="biaya-form">
+                    <label for="biaya-pasien">Nama Pasien:</label>
+                    <input type="text" id="biaya-pasien" required>
+
+                    <label for="biaya-administrasi">Biaya Administrasi:</label>
+                    <input type="number" id="biaya-administrasi" required>
+
+                    <button type="button" id="add-biaya">Tambah Biaya</button>
+                </form>
+            </div>
+
+            <!-- Form Stok -->
+            <div id="stok">
+                <h3>Stok Obat</h3>
+                <form id="stok-form">
+                    <label for="stok-obat">Nama Obat:</label>
+                    <input type="text" id="stok-obat" required>
+
+                    <label for="stok-jumlah">Jumlah Stok:</label>
+                    <input type="number" id="stok-jumlah" required>
+
+                    <button type="button" id="add-stok">Tambah Stok Obat</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Tabel -->
+        <div id="data-list">
+            <h3>Data Pasien</h3>
+            <table id="pasien-table">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Nomor Identitas</th>
+                        <th>Alamat</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Umur</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Dokter</h3>
+            <table id="dokter-table">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Spesialis</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Obat</h3>
+            <table id="obat-table">
+                <thead>
+                    <tr>
+                        <th>Nama Obat</th>
+                        <th>Aturan Penggunaan</th>
+                        <th>Indikasi</th>
+                        <th>Harga</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Diagnosa</h3>
+            <table id="diagnosa-table">
+                <thead>
+                    <tr>
+                        <th>Nama Pasien</th>
+                        <th>Diagnosa Pasien</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Resep</h3>
+            <table id="resep-table">
+                <thead>
+                    <tr>
+                        <th>Nama Pasien</th>
+                        <th>ID Resep</th>
+                        <th>Detail Obat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Biaya</h3>
+            <table id="biaya-table">
+                <thead>
+                    <tr>
+                        <th>Nama Pasien</th>
+                        <th>Biaya Administrasi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Data Stok Obat</h3>
+            <table id="stok-table">
+                <thead>
+                    <tr>
+                        <th>Nama Obat</th>
+                        <th>Jumlah Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">Data berhasil disimpan!</div>
+
+    <script>
+        // Ambil data dari localStorage jika ada
+        let pasienData = JSON.parse(localStorage.getItem('pasienData')) || [];
+        let dokterData = JSON.parse(localStorage.getItem('dokterData')) || [];
+        let obatData = JSON.parse(localStorage.getItem('obatData')) || [];
+        let diagnosaData = JSON.parse(localStorage.getItem('diagnosaData')) || [];
+        let resepData = JSON.parse(localStorage.getItem('resepData')) || [];
+        let biayaData = JSON.parse(localStorage.getItem('biayaData')) || [];
+        let stokData = JSON.parse(localStorage.getItem('stokData')) || [];
+
+        // Fungsi untuk menyimpan data ke localStorage
+        function saveData() {
+            localStorage.setItem('pasienData', JSON.stringify(pasienData));
+            localStorage.setItem('dokterData', JSON.stringify(dokterData));
+            localStorage.setItem('obatData', JSON.stringify(obatData));
+            localStorage.setItem('diagnosaData', JSON.stringify(diagnosaData));
+            localStorage.setItem('resepData', JSON.stringify(resepData));
+            localStorage.setItem('biayaData', JSON.stringify(biayaData));
+            localStorage.setItem('stokData', JSON.stringify(stokData));
+        }
+
+        // Fungsi untuk menampilkan data ke tabel
+        function displayData() {
+            const tables = {
+                pasien: document.querySelector("#pasien-table tbody"),
+                dokter: document.querySelector("#dokter-table tbody"),
+                obat: document.querySelector("#obat-table tbody"),
+                diagnosa: document.querySelector("#diagnosa-table tbody"),
+                resep: document.querySelector("#resep-table tbody"),
+                biaya: document.querySelector("#biaya-table tbody"),
+                stok: document.querySelector("#stok-table tbody")
+            };
+
+            // Clear all tables before re-rendering
+            for (let table in tables) {
+                tables[table].innerHTML = '';
+            }
+
+            // Render data
+            pasienData.forEach((pasien, index) => {
+                const row = `<tr>
+                    <td>${pasien.nama}</td>
+                    <td>${pasien.nomor}</td>
+                    <td>${pasien.alamat}</td>
+                    <td>${pasien.jenisKelamin}</td>
+                    <td>${pasien.tglLahir}</td>
+                    <td>${pasien.umur}</td>
+                    <td><button class="delete-btn" onclick="deletePasien(${index})">Hapus</button></td>
+                </tr>`;
+                tables.pasien.innerHTML += row;
+            });
+
+            dokterData.forEach((dokter, index) => {
+                const row = `<tr>
+                    <td>${dokter.nama}</td>
+                    <td>${dokter.spesialis}</td>
+                    <td><button class="delete-btn" onclick="deleteDokter(${index})">Hapus</button></td>
+                </tr>`;
+                tables.dokter.innerHTML += row;
+            });
+
+            obatData.forEach((obat, index) => {
+                const row = `<tr>
+                    <td>${obat.nama}</td>
+                    <td>${obat.aturan}</td>
+                    <td>${obat.indikasi}</td>
+                    <td>${obat.harga}</td>
+                    <td><button class="delete-btn" onclick="deleteObat(${index})">Hapus</button></td>
+                </tr>`;
+                tables.obat.innerHTML += row;
+            });
+
+            diagnosaData.forEach((diagnosa, index) => {
+                const row = `<tr>
+                    <td>${diagnosa.pasien}</td>
+                    <td>${diagnosa.nama}</td>
+                    <td><button class="delete-btn" onclick="deleteDiagnosa(${index})">Hapus</button></td>
+                </tr>`;
+                tables.diagnosa.innerHTML += row;
+            });
+
+            resepData.forEach((resep, index) => {
+                const row = `<tr>
+                    <td>${resep.pasien}</td>
+                    <td>${resep.id}</td>
+                    <td>${resep.detail}</td>
+                    <td><button class="delete-btn" onclick="deleteResep(${index})">Hapus</button></td>
+                </tr>`;
+                tables.resep.innerHTML += row;
+            });
+
+            biayaData.forEach((biaya, index) => {
+                const row = `<tr>
+                    <td>${biaya.pasien}</td>
+                    <td>${biaya.administrasi}</td>
+                    <td><button class="delete-btn" onclick="deleteBiaya(${index})">Hapus</button></td>
+                </tr>`;
+                tables.biaya.innerHTML += row;
+            });
+
+            stokData.forEach((stok, index) => {
+                const row = `<tr>
+                    <td>${stok.obat}</td>
+                    <td>${stok.jumlah}</td>
+                    <td><button class="delete-btn" onclick="deleteStok(${index})">Hapus</button></td>
+                </tr>`;
+                tables.stok.innerHTML += row;
+            });
+        }
+
+        // Fungsi untuk menambahkan data
+        document.querySelector("#add-pasien").addEventListener("click", function() {
+            const pasien = {
+                nama: document.getElementById("pasien-nama").value,
+                nomor: document.getElementById("pasien-nomor").value,
+                alamat: document.getElementById("pasien-alamat").value,
+                jenisKelamin: document.getElementById("pasien-jenis-kelamin").value,
+                tglLahir: document.getElementById("pasien-tgl-lahir").value,
+                umur: document.getElementById("pasien-umur").value,
+            };
+            pasienData.push(pasien);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        document.querySelector("#add-dokter").addEventListener("click", function() {
+            const dokter = {
+                nama: document.getElementById("dokter-nama").value,
+                spesialis: document.getElementById("dokter-spesialis").value
+            };
+            dokterData.push(dokter);
+            saveData();
+            displayData();
+            showNotification();
+        });
+        
+        document.querySelector("#add-obat").addEventListener("click", function() {
+            const obat = {
+                nama: document.getElementById("obat-nama").value,
+                aturan: document.getElementById("obat-aturan").value,
+                indikasi: document.getElementById('obat-indikasi').value,
+                harga: document.getElementById("obat-harga").value,
+            };
+            obatData.push(obat);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        document.querySelector("#add-diagnosa").addEventListener("click", function() {
+            const diagnosa = {
+                pasien: document.getElementById("diagnosa-pasien").value,
+                nama: document.getElementById("diagnosa-nama").value,
+            };
+            diagnosaData.push(diagnosa);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        document.querySelector("#add-resep").addEventListener("click", function() {
+            const resep = {
+                pasien: document.getElementById("resep-pasien").value,
+                id: document.getElementById("resep-id").value,
+                detail: document.getElementById("resep-detail").value,
+            };
+            resepData.push(resep);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        document.querySelector("#add-biaya").addEventListener("click", function() {
+            const biaya = {
+                pasien: document.getElementById("biaya-pasien").value,
+                administrasi: document.getElementById("biaya-administrasi").value,
+            };
+            biayaData.push(biaya);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        document.querySelector("#add-stok").addEventListener("click", function() {
+            const stok = {
+                obat: document.getElementById("stok-obat").value,
+                jumlah: document.getElementById("stok-jumlah").value,
+            };
+            stokData.push(stok);
+            saveData();
+            displayData();
+            showNotification();
+        });
+
+        // Fungsi untuk menghapus data
+        function deletePasien(index) {
+            pasienData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteDokter(index) {
+            dokterData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteObat(index) {
+            obatData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteDiagnosa(index) {
+            diagnosaData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteResep(index) {
+            resepData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteBiaya(index) {
+            biayaData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+
+        function deleteStok(index) {
+            stokData.splice(index, 1);
+            saveData();
+            displayData();
+        }
+        
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification() {
+            const notification = document.getElementById("notification");
+            notification.style.display = "block";
+            setTimeout(function() {
+                notification.style.display = "none";
+            }, 2000);
+        }
+
+        // Tampilkan data saat halaman dimuat
+        displayData();
+    </script>
+</body>
+</html>
